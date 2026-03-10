@@ -1,25 +1,36 @@
 package com.br.autopecas.controller;
 
-import com.br.autopecas.dto.LoginDTO;
+import com.br.autopecas.dto.AuthResponse;
+import com.br.autopecas.dto.LoginRequest;
+import com.br.autopecas.dto.RegisterRequest;
 import com.br.autopecas.service.AuthService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
-@RequiredArgsConstructor
+@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService service;
 
+    public AuthController(AuthService service) {
+        this.service = service;
+    }
+
+    @PostMapping("/register")
+    public AuthResponse register(@RequestBody RegisterRequest request) {
+
+        String token = service.register(request);
+
+        return new AuthResponse(token);
+    }
+
     @PostMapping("/login")
-    public String login(@RequestBody LoginDTO dto){
+    public AuthResponse login(@RequestBody LoginRequest request) {
 
-        return service.login(dto);
+        String token = service.login(request);
 
+        return new AuthResponse(token);
     }
 
 }
