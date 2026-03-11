@@ -3,50 +3,79 @@ package com.br.autopecas.controller;
 import java.util.List;
 
 import com.br.autopecas.dto.ProductDTO;
+import com.br.autopecas.dto.SearchResultDTO;
+import com.br.autopecas.model.Product;
+import com.br.autopecas.service.InventoryService;
+import com.br.autopecas.service.ProductService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.br.autopecas.model.Product;
-import com.br.autopecas.service.ProductService;
+import com.br.autopecas.dto.OfferDTO;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
 
     private final ProductService service;
+    private final InventoryService inventoryService;
 
-    public ProductController(ProductService service) {
+    public ProductController(ProductService service, InventoryService inventoryService) {
 
         this.service = service;
+        this.inventoryService = inventoryService;
     }
 
     @GetMapping
-    public List<Product> getAll() {
-
-        return service.getAll();
+    public ResponseEntity<List<Product>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public Product getById(@PathVariable Long id) {
+    public ResponseEntity<Product> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
+    }
 
-        return service.getById(id);
+    @GetMapping("/{id}/offers")
+    public List<OfferDTO> getOffers(@PathVariable Long id){
+
+        return inventoryService.getOffersByProduct(id);
+
+    }
+
+    @GetMapping("/{id}/nearby")
+    public List<OfferDTO> getNearbyOffers(@PathVariable Long id, @RequestParam Double lat, @RequestParam Double lon){
+
+        return inventoryService.getNearbyOffers(id, lat, lon);
+    }
+
+    @GetMapping("/search")
+    public List<SearchResultDTO> search(@RequestParam String term, @RequestParam Double lat, @RequestParam Double lon){
+
+        return inventoryService.search(term, lat, lon);
+
     }
 
     @PostMapping
-    public Product create(@RequestBody Product product) {
+    public ResponseEntity<Product> create(@RequestBody ProductDTO request) {
 
-        return service.save(product);
+        Product product = service.save(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
     @PutMapping("/{id}")
-    public Product update(@PathVariable Long id,
-                             @RequestBody ProductDTO request){
-        return service.update(id, request);
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody ProductDTO request) {
+
+        return ResponseEntity.ok(service.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
 
         service.delete(id);
-    }
 
+        return ResponseEntity.noContent().build();
+    }
 }

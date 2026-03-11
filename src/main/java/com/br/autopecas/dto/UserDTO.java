@@ -9,20 +9,17 @@ import lombok.AllArgsConstructor;
 
 import java.io.Serializable;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InventoryDTO implements Serializable {
+public class UserDTO implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long companyId;
-    private String companyName; // opcional, para exibir no front
-    private Long productId;
-    private String productName; // opcional, para exibir no front
-    private Integer quantity;
-    private Double price;
+    private String name;
+    private String email;
+    private String role;
+    private Boolean active;
 }

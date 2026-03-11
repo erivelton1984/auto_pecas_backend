@@ -3,8 +3,10 @@ package com.br.autopecas.service;
 import com.br.autopecas.dto.CategoryDTO;
 import com.br.autopecas.model.Category;
 import com.br.autopecas.repository.CategoryRepository;
-import org.springframework.stereotype.Service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -14,41 +16,37 @@ public class CategoryService {
     private final CategoryRepository repository;
 
     public CategoryService(CategoryRepository repository) {
-
         this.repository = repository;
     }
 
     public List<Category> getAll() {
-
         return repository.findAll();
     }
 
-    public Category save(Category cat) {
+    public Category getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada"));
+    }
+
+    public Category save(CategoryDTO dto) {
 
         Category category = new Category();
-
-        category.setName(cat.getName());
+        category.setName(dto.getName());
 
         return repository.save(category);
     }
 
-    public Category getById(Long id) {
+    public Category update(Long id, CategoryDTO dto) {
 
-        return repository.findById(id).orElseThrow();
-    }
+        Category category = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada"));
 
-    public Category update(Long id, CategoryDTO categoryDTO){
+        category.setName(dto.getName());
 
-        Category cat = repository.findById(id)
-                .orElseThrow();
-
-        cat.setName(categoryDTO.getName());
-
-        return repository.save(cat);
+        return repository.save(category);
     }
 
     public void delete(Long id) {
-
         repository.deleteById(id);
     }
 }

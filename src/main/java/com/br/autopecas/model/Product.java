@@ -1,75 +1,48 @@
 package com.br.autopecas.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.io.Serializable;
+import java.util.List;
 
-@Entity
 @Data
-public class Product {
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Product implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
-    private String code; // código da peça
+    @Column(nullable = false)
+    private String code; // código da peça (partNumber)
 
     private String brand;
 
+    @Column(length = 1000)
     private String description;
 
     @ManyToOne
+    @JoinColumn(name = "category_id")
+    @JsonBackReference
     private Category category;
 
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "product")
+    @JsonManagedReference
+    private List<Inventory> inventories;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductOEM> oems;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductCrossReference> crossReferences;
 }
