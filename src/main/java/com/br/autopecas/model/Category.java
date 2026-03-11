@@ -1,5 +1,6 @@
 package com.br.autopecas.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
-    // Opcional: lista de produtos da categoria
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category")
+    @JsonManagedReference
     private List<Product> products;
 }

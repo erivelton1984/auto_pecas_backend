@@ -1,6 +1,7 @@
 package com.br.autopecas.service;
 
 import com.br.autopecas.dto.InventoryDTO;
+import com.br.autopecas.dto.OfferDTO;
 import com.br.autopecas.model.Company;
 import com.br.autopecas.model.Inventory;
 import com.br.autopecas.model.Product;
@@ -56,6 +57,25 @@ public class InventoryService {
         inventory.setQuantity(dto.getQuantity());
 
         return repository.save(inventory);
+    }
+
+    public List<OfferDTO> getOffersByProduct(Long productId){
+
+        List<Inventory> inventories = repository.findByProductId(productId);
+
+        return inventories.stream().map(inv -> {
+
+            OfferDTO offer = new OfferDTO();
+
+            offer.setCompanyName(inv.getCompany().getName());
+            offer.setCity(inv.getCompany().getCity());
+            offer.setPrice(inv.getPrice());
+            offer.setQuantity(inv.getQuantity());
+
+            return offer;
+
+        }).toList();
+
     }
 
     public Inventory update(Long id, InventoryDTO dto) {

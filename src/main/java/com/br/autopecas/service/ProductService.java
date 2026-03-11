@@ -33,6 +33,23 @@ public class ProductService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
     }
 
+    public List<Product> search(String term) {
+
+        List<Product> productsByName = repository.findByNameContainingIgnoreCase(term);
+
+        if (!productsByName.isEmpty()) {
+            return productsByName;
+        }
+
+        List<Product> productsByCode = repository.findByCodeContainingIgnoreCase(term);
+
+        if (!productsByCode.isEmpty()) {
+            return productsByCode;
+        }
+
+        return repository.findByBrandContainingIgnoreCase(term);
+    }
+
     public Product save(ProductDTO dto) {
 
         Category category = categoryRepository.findById(dto.getCategoryId())

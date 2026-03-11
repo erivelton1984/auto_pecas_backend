@@ -1,5 +1,6 @@
 package com.br.autopecas.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,7 @@ public class Company {
     private Double longitude;
 
     // Lista de produtos disponíveis (via Inventory)
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "company")
+    @JsonManagedReference
     private List<Inventory> inventories;
 }

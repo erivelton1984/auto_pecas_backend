@@ -1,5 +1,6 @@
 package com.br.autopecas.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,8 @@ public class Product {
     @Column(length = 1000)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonBackReference
     private Category category;
 }
