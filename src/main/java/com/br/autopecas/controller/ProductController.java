@@ -3,6 +3,7 @@ package com.br.autopecas.controller;
 import java.util.List;
 
 import com.br.autopecas.dto.ProductDTO;
+import com.br.autopecas.dto.SearchResultDTO;
 import com.br.autopecas.model.Product;
 import com.br.autopecas.service.InventoryService;
 import com.br.autopecas.service.ProductService;
@@ -36,17 +37,23 @@ public class ProductController {
         return ResponseEntity.ok(service.getById(id));
     }
 
-    @GetMapping("/search")
-    public List<Product> search(@RequestParam String term) {
-
-        return service.search(term);
-
-    }
-
     @GetMapping("/{id}/offers")
     public List<OfferDTO> getOffers(@PathVariable Long id){
 
         return inventoryService.getOffersByProduct(id);
+
+    }
+
+    @GetMapping("/{id}/nearby")
+    public List<OfferDTO> getNearbyOffers(@PathVariable Long id, @RequestParam Double lat, @RequestParam Double lon){
+
+        return inventoryService.getNearbyOffers(id, lat, lon);
+    }
+
+    @GetMapping("/search")
+    public List<SearchResultDTO> search(@RequestParam String term, @RequestParam Double lat, @RequestParam Double lon){
+
+        return inventoryService.search(term, lat, lon);
 
     }
 
@@ -59,9 +66,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(
-            @PathVariable Long id,
-            @RequestBody ProductDTO request) {
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody ProductDTO request) {
 
         return ResponseEntity.ok(service.update(id, request));
     }

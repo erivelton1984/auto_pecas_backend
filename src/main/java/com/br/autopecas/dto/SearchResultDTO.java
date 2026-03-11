@@ -2,11 +2,12 @@ package com.br.autopecas.dto;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 @Data
-public class OfferDTO {
+public class SearchResultDTO {
 
+    private String productName;
+    private String productCode;
+    private String brand;
     private String companyName;
     private String city;
     private Double price;

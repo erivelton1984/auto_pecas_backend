@@ -50,6 +50,21 @@ public class ProductService {
         return repository.findByBrandContainingIgnoreCase(term);
     }
 
+    public List<Product> searchProducts(String term) {
+
+        List<Product> products = repository.findByNameContainingIgnoreCase(term);
+
+        if(products.isEmpty()){
+            products = repository.findByCodeContainingIgnoreCase(term);
+        }
+
+        if(products.isEmpty()){
+            products = repository.findByBrandContainingIgnoreCase(term);
+        }
+
+        return products;
+    }
+
     public Product save(ProductDTO dto) {
 
         Category category = categoryRepository.findById(dto.getCategoryId())

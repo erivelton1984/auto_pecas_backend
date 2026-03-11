@@ -5,13 +5,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Company {
+public class Company implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +39,8 @@ public class Company {
     @OneToMany(mappedBy = "company")
     @JsonManagedReference
     private List<Inventory> inventories;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User owner;
 }
