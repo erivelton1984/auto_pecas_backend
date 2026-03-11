@@ -5,6 +5,8 @@ import com.br.autopecas.dto.LoginRequest;
 import com.br.autopecas.dto.RegisterRequest;
 import com.br.autopecas.service.AuthService;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,19 +20,21 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public AuthResponse register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
 
-        String token = service.register(request);
+        AuthResponse response = service.register(request);
 
-        return new AuthResponse(token);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
 
-        String token = service.login(request);
+        AuthResponse response = service.login(request);
 
-        return new AuthResponse(token);
+        return ResponseEntity
+                .ok(response);
     }
-
 }
