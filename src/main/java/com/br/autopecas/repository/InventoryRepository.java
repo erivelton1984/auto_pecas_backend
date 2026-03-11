@@ -12,7 +12,8 @@ import java.util.List;
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
     @Query("""
-        SELECT DISTINCT i FROM Inventory i
+        SELECT DISTINCT i
+        FROM Inventory i
         JOIN i.product p
         LEFT JOIN p.oems o
         LEFT JOIN p.crossReferences cr
@@ -20,6 +21,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
         LOWER(p.name) LIKE LOWER(CONCAT('%', :term, '%'))
         OR LOWER(p.code) LIKE LOWER(CONCAT('%', :term, '%'))
         OR LOWER(p.brand) LIKE LOWER(CONCAT('%', :term, '%'))
+        OR LOWER(p.description) LIKE LOWER(CONCAT('%', :term, '%'))
         OR LOWER(o.oem) LIKE LOWER(CONCAT('%', :term, '%'))
         OR LOWER(cr.code) LIKE LOWER(CONCAT('%', :term, '%'))
     """)

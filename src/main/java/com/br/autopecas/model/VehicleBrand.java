@@ -3,21 +3,18 @@ package com.br.autopecas.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Data
-public class OrderItem {
+public class VehicleBrand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Order order;
+    private String name;
 
-    @ManyToOne
-    private Inventory inventory;
-
-    private Integer quantity;
-
-    private Double price;
+    @OneToMany(mappedBy = "brand")
+    private List<Vehicle> models;
 }

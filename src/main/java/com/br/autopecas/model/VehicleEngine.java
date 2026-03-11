@@ -5,19 +5,17 @@ import lombok.Data;
 
 @Entity
 @Data
-public class OrderItem {
+public class VehicleEngine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Order order;
+    private String engine;
+
+    private String fuel;
 
     @ManyToOne
-    private Inventory inventory;
-
-    private Integer quantity;
-
-    private Double price;
+    @JoinColumn(name = "generation_id")
+    private VehicleGeneration generation;
 }
