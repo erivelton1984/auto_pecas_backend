@@ -1,21 +1,34 @@
 package com.br.autopecas.service;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.security.Key;
+import java.util.Date;
 
 @Service
 public class JwtService {
 
-    private String SECRET="autopecas";
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiration}")
+    private Long expiration;
 
     public String generateToken(String email){
 
+        Key key = Keys.hmacShaKeyFor(secret.getBytes());
+
         return Jwts.builder()
                 .setSubject(email)
-                .signWith(SignatureAlgorithm.HS256,SECRET)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-
     }
 
 }

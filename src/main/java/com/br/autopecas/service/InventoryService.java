@@ -1,12 +1,16 @@
 package com.br.autopecas.service;
 
-import com.br.autopecas.dto.CompanyDTO;
 import com.br.autopecas.dto.InventoryDTO;
 import com.br.autopecas.model.Company;
 import com.br.autopecas.model.Inventory;
+import com.br.autopecas.model.Product;
 import com.br.autopecas.repository.CompanyRepository;
 import com.br.autopecas.repository.InventoryRepository;
+import com.br.autopecas.repository.ProductRepository;
+
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -14,49 +18,66 @@ import java.util.List;
 public class InventoryService {
 
     private final InventoryRepository repository;
+    private final ProductRepository productRepository;
+    private final CompanyRepository companyRepository;
 
-    public InventoryService(InventoryRepository repository) {
+    public InventoryService(
+            InventoryRepository repository,
+            ProductRepository productRepository,
+            CompanyRepository companyRepository) {
 
         this.repository = repository;
+        this.productRepository = productRepository;
+        this.companyRepository = companyRepository;
     }
 
     public List<Inventory> getAll() {
-
         return repository.findAll();
     }
 
-    public Company save(Inventory inv) {
+    public Inventory getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estoque não encontrado"));
+    }
+
+    public Inventory save(InventoryDTO dto) {
+
+        Product product = productRepository.findById(dto.getProductId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
+
+        Company company = companyRepository.findById(dto.getCompanyId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada"));
 
         Inventory inventory = new Inventory();
 
-        inventory.setProduct(inv.getProduct());
-        inventory.setPrice(inv.getPrice());
-        inventory.setCompany(inv.getCompany());
-        inventory.setQuantity(inv.getQuantity());
+        inventory.setProduct(product);
+        inventory.setCompany(company);
+        inventory.setPrice(dto.getPrice());
+        inventory.setQuantity(dto.getQuantity());
 
-        return repository.save(inventory).getCompany();
+        return repository.save(inventory);
     }
 
-    public Inventory getById(Long id) {
+    public Inventory update(Long id, InventoryDTO dto) {
 
-        return repository.findById(id).orElseThrow();
-    }
+        Inventory inventory = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estoque não encontrado"));
 
-    public Inventory update(Long id, InventoryDTO inventoryDTO){
+        Product product = productRepository.findById(dto.getProductId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
 
-        Inventory inv = repository.findById(id)
-                .orElseThrow();
+        Company company = companyRepository.findById(dto.getCompanyId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada"));
 
-        inv.setProduct(inventoryDTO.getProduct());
-        inv.setPrice(inventoryDTO.getPrice());
-        inv.setCompany(inventoryDTO.getCompany());
-        inv.setQuantity(inventoryDTO.getQuantity());
+        inventory.setProduct(product);
+        inventory.setCompany(company);
+        inventory.setPrice(dto.getPrice());
+        inventory.setQuantity(dto.getQuantity());
 
-        return repository.save(inv);
+        return repository.save(inventory);
     }
 
     public void delete(Long id) {
-
         repository.deleteById(id);
     }
 }
