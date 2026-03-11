@@ -1,55 +1,26 @@
 package com.br.autopecas.dto;
 
-import com.br.autopecas.model.Company;
-import com.br.autopecas.model.Product;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import java.math.BigDecimal;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class InventoryDTO {
 
     private Long id;
-    private Company company;
-    private Product product;
+
+    private Long companyId;
+
+    private String companyName; // opcional, para exibir no front
+
+    private Long productId;
+
+    private String productName; // opcional, para exibir no front
+
     private Integer quantity;
-    private Double price;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
+    private BigDecimal price;
 }

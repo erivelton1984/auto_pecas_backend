@@ -7,19 +7,15 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompanyDTO {
+public class UserDTO {
 
     private Long id;
 
     private String name;
 
-    private String city;
+    private String email;
 
-    private String state;
+    private String role;
 
-    private String address;
-
-    private Double latitude;
-
-    private Double longitude;
+    private Boolean active;
 }
