@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class InventoryService {
 
-    private InventoryRepository repository;
+    private final InventoryRepository repository;
 
     public InventoryService(InventoryRepository repository) {
 
@@ -31,10 +31,10 @@ public class InventoryService {
 
         inventory.setProduct(inv.getProduct());
         inventory.setPrice(inv.getPrice());
-        inventory.setCompany(inv.getCompany().getId());
+        inventory.setCompany(inv.getCompany());
         inventory.setQuantity(inv.getQuantity());
 
-        return repository.save(inventory);
+        return repository.save(inventory).getCompany();
     }
 
     public Inventory getById(Long id) {

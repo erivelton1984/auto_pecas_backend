@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class CompanyService {
 
-    private CompanyRepository repository;
+    private final CompanyRepository repository;
 
     public CompanyService(CompanyRepository repository) {
 

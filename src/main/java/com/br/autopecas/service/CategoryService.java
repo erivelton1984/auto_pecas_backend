@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class CategoryService {
 
-    private CategoryRepository repository;
+    private final CategoryRepository repository;
 
     public CategoryService(CategoryRepository repository) {
 
