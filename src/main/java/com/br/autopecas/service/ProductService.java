@@ -4,10 +4,7 @@ import java.util.List;
 
 import com.br.autopecas.dto.ProductDTO;
 import com.br.autopecas.dto.ProductVehicleResponse;
-import com.br.autopecas.model.Category;
-import com.br.autopecas.model.Company;
-import com.br.autopecas.model.Inventory;
-import com.br.autopecas.model.Product;
+import com.br.autopecas.model.*;
 import com.br.autopecas.repository.CategoryRepository;
 import com.br.autopecas.repository.InventoryRepository;
 import com.br.autopecas.repository.ProductRepository;
@@ -107,16 +104,33 @@ public class ProductService {
 
     public Product save(ProductDTO dto) {
 
-        Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada"));
-
         Product product = new Product();
 
         product.setName(dto.getName());
         product.setCode(dto.getCode());
         product.setBrand(dto.getBrand());
         product.setDescription(dto.getDescription());
+
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
         product.setCategory(category);
+
+        // Converter OEMs
+        if (dto.getOems() != null) {
+
+            List<ProductOEM> oemList = dto.getOems()
+                    .stream()
+                    .map(o -> {
+                        ProductOEM po = new ProductOEM();
+                        po.setOem(o);
+                        po.setProduct(product);
+                        return po;
+                    })
+                    .toList();
+
+            product.setOems(oemList);
+        }
 
         return repository.save(product);
     }
