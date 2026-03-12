@@ -11,6 +11,8 @@ import java.util.List;
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
+    List<Inventory> findByProductId(Long productId);
+
     @Query("""
         SELECT DISTINCT i
         FROM Inventory i
@@ -27,5 +29,12 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     """)
     List<Inventory> searchProducts(@Param("term") String term);
 
-    List<Inventory> findByProductId(Long productId);
+    @Query("""
+        SELECT i
+        FROM Inventory i
+        JOIN i.product p
+        JOIN ProductVehicle pv ON pv.product.id = p.id
+        WHERE pv.engine.id = :engineId
+    """)
+    List<Inventory> findByVehicleEngine(Long engineId);
 }
