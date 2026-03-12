@@ -2,6 +2,7 @@ package com.br.autopecas.controller;
 
 import com.br.autopecas.model.*;
 import com.br.autopecas.repository.*;
+import com.br.autopecas.service.VehicleService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,16 +16,19 @@ public class VehicleController {
     private final VehicleGenerationRepository generationRepository;
     private final VehicleEngineRepository engineRepository;
 
+    private final VehicleService vehicleService;
+
     public VehicleController(
             VehicleBrandRepository brandRepository,
             VehicleRepository vehicleRepository,
             VehicleGenerationRepository generationRepository,
-            VehicleEngineRepository engineRepository
+            VehicleEngineRepository engineRepository, VehicleService vehicleService
     ) {
         this.brandRepository = brandRepository;
         this.vehicleRepository = vehicleRepository;
         this.generationRepository = generationRepository;
         this.engineRepository = engineRepository;
+        this.vehicleService = vehicleService;
     }
 
     // listar marcas
@@ -49,6 +53,31 @@ public class VehicleController {
     @GetMapping("/engines/{generationId}")
     public List<VehicleEngine> getEngines(@PathVariable Long generationId) {
         return engineRepository.findByGenerationId(generationId);
+    }
+
+    @PostMapping
+    public Vehicle save(@RequestBody Vehicle vehicle) {
+        return vehicleService.save(vehicle);
+    }
+
+    @PostMapping ("/vehicle-brands")
+    public VehicleBrand save(@RequestBody VehicleBrand vehicleBrand) {
+        return brandRepository.save(vehicleBrand);
+    }
+
+    @PostMapping ("/vehicle-generation")
+    public VehicleGeneration save(@RequestBody VehicleGeneration vehicleGeneration) {
+        return generationRepository.save(vehicleGeneration);
+    }
+
+    @PostMapping ("/vehicle-engines")
+    public VehicleEngine save(@RequestBody VehicleEngine vehicleEngine) {
+        return engineRepository.save(vehicleEngine);
+    }
+
+    @GetMapping
+    public List<Vehicle> findAll() {
+        return vehicleService.findAll();
     }
 
 }
