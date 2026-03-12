@@ -1,5 +1,8 @@
 package com.br.autopecas.util;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DistanceCalculator {
 
     private static final int EARTH_RADIUS = 6371;

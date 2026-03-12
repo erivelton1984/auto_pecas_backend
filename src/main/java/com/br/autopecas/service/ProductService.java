@@ -3,25 +3,35 @@ package com.br.autopecas.service;
 import java.util.List;
 
 import com.br.autopecas.dto.ProductDTO;
+import com.br.autopecas.dto.ProductVehicleResponse;
 import com.br.autopecas.model.Category;
+import com.br.autopecas.model.Company;
+import com.br.autopecas.model.Inventory;
 import com.br.autopecas.model.Product;
 import com.br.autopecas.repository.CategoryRepository;
+import com.br.autopecas.repository.InventoryRepository;
 import com.br.autopecas.repository.ProductRepository;
 
+import com.br.autopecas.util.DistanceCalculator;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+import java.util.Comparator;
 
 @Service
 public class ProductService {
 
     private final ProductRepository repository;
     private final CategoryRepository categoryRepository;
+    private final InventoryRepository inventoryRepository;
+    private final DistanceCalculator distance;
 
     public ProductService(ProductRepository repository,
-                          CategoryRepository categoryRepository) {
+                          CategoryRepository categoryRepository, InventoryRepository inventoryRepository, DistanceCalculator distanceCalculator) {
         this.repository = repository;
         this.categoryRepository = categoryRepository;
+        this.inventoryRepository = inventoryRepository;
+        this.distance = distanceCalculator;
     }
 
     public List<Product> getAll() {
@@ -63,6 +73,36 @@ public class ProductService {
         }
 
         return products;
+    }
+
+    public List<ProductVehicleResponse> findByVehicle(Long engineId, Double lat, Double lon) {
+
+        List<Inventory> inventories = inventoryRepository.findByVehicleEngine(engineId);
+
+        return inventories.stream().map(i -> {
+
+                    Company company = i.getCompany();
+
+                    double distance = DistanceCalculator.calculate(
+                            lat,
+                            lon,
+                            company.getLatitude(),
+                            company.getLongitude()
+                    );
+
+                    return new ProductVehicleResponse(
+                            i.getProduct().getName(),
+                            i.getProduct().getCode(),
+                            i.getProduct().getBrand(),
+                            company.getName(),
+                            company.getCity(),
+                            i.getPrice(),
+                            i.getQuantity(),
+                            distance
+                    );
+
+                }).sorted(Comparator.comparing(ProductVehicleResponse::getDistanceKm))
+                .toList();
     }
 
     public Product save(ProductDTO dto) {
