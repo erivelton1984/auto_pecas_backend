@@ -132,6 +132,26 @@ public class ProductService {
             product.setOems(oemList);
         }
 
+        if(dto.getCrossReferences() != null){
+
+            List<ProductCrossReference> crossList =
+                    dto.getCrossReferences()
+                            .stream()
+                            .map(c -> {
+
+                                ProductCrossReference cross = new ProductCrossReference();
+
+                                cross.setBrand(c.getBrand());
+                                cross.setCode(c.getCode());
+                                cross.setProduct(product);
+
+                                return cross;
+
+                            }).toList();
+
+            product.setCrossReferences(crossList);
+        }
+
         return repository.save(product);
     }
 

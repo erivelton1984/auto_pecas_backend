@@ -17,6 +17,6 @@ public class ProductOEM {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonBackReference
+    @JsonBackReference("product-oem")
     private Product product;
 }
