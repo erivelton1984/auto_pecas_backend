@@ -37,12 +37,14 @@ public class Product implements Serializable {
     private Category category;
 
     @OneToMany(mappedBy = "product")
-    @JsonManagedReference
+    @JsonManagedReference("product-inventory")
     private List<Inventory> inventories;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference("product-oem")
     private List<ProductOEM> oems;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("product-cross")
     private List<ProductCrossReference> crossReferences;
 }

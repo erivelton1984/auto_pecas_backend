@@ -21,6 +21,6 @@ public class ProductCrossReference {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonBackReference
+    @JsonBackReference("product-cross")
     private Product product;
 }

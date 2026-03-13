@@ -19,4 +19,7 @@ public class ProductDTO implements Serializable {
     private String description;
     private Long categoryId;
     private List<String> oems;
+    private List<CrossReferenceDTO> crossReferences;
+
+
 }

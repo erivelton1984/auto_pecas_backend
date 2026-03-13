@@ -26,7 +26,7 @@ public class Inventory implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonBackReference
+    @JsonBackReference("product-inventory")
     private Product product;
 
     @Column(nullable = false)
