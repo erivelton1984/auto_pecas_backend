@@ -18,7 +18,6 @@ public class InventoryDTO implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long companyId;
     private String companyName; // opcional, para exibir no front
     private Long productId;

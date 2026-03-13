@@ -3,6 +3,8 @@ package com.br.autopecas.controller;
 import com.br.autopecas.model.*;
 import com.br.autopecas.repository.*;
 import com.br.autopecas.service.VehicleService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,8 +68,11 @@ public class VehicleController {
     }
 
     @PostMapping ("/vehicle-generation")
-    public VehicleGeneration save(@RequestBody VehicleGeneration vehicleGeneration) {
-        return generationRepository.save(vehicleGeneration);
+    public ResponseEntity<VehicleGeneration> save(@RequestBody VehicleGeneration vehicleGeneration) {
+
+        VehicleGeneration vehicle = vehicleService.saveGeneration(vehicleGeneration);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(vehicle);
     }
 
     @PostMapping ("/vehicle-engines")

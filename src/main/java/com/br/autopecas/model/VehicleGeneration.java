@@ -1,5 +1,6 @@
 package com.br.autopecas.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,5 +23,6 @@ public class VehicleGeneration {
     private Vehicle model;
 
     @OneToMany(mappedBy = "generation")
+    @JsonManagedReference
     private List<VehicleEngine> engines;
 }
