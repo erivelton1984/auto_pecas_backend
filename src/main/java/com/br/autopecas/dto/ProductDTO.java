@@ -13,13 +13,10 @@ import java.util.List;
 public class ProductDTO implements Serializable {
 
     private Long id;
-
     private String name;
     private String code;
     private String brand;
     private String description;
-
     private Long categoryId;
-
     private List<String> oems;
 }
