@@ -21,14 +21,14 @@ public class ProductService {
     private final ProductRepository repository;
     private final CategoryRepository categoryRepository;
     private final InventoryRepository inventoryRepository;
-    private final DistanceCalculator distance;
+    private final ProductRepository productRepository;
 
     public ProductService(ProductRepository repository,
-                          CategoryRepository categoryRepository, InventoryRepository inventoryRepository, DistanceCalculator distanceCalculator) {
+                          CategoryRepository categoryRepository, InventoryRepository inventoryRepository, DistanceCalculator distanceCalculator, ProductRepository productRepository) {
         this.repository = repository;
         this.categoryRepository = categoryRepository;
         this.inventoryRepository = inventoryRepository;
-        this.distance = distanceCalculator;
+        this.productRepository = productRepository;
     }
 
     public List<Product> getAll() {
@@ -70,6 +70,10 @@ public class ProductService {
         }
 
         return products;
+    }
+
+    public List<Product> smartSearch(String term){
+        return productRepository.smartSearch(term);
     }
 
     public List<ProductVehicleResponse> findByVehicle(Long engineId, Double lat, Double lon) {

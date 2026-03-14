@@ -20,11 +20,13 @@ public class ProductController {
 
     private final ProductService service;
     private final InventoryService inventoryService;
+    private final ProductService productService;
 
-    public ProductController(ProductService service, InventoryService inventoryService) {
+    public ProductController(ProductService service, InventoryService inventoryService, ProductService productService) {
 
         this.service = service;
         this.inventoryService = inventoryService;
+        this.productService = productService;
     }
 
     @GetMapping
@@ -55,6 +57,11 @@ public class ProductController {
 
         return inventoryService.search(term, lat, lon);
 
+    }
+
+    @GetMapping("/smart-search")
+    public List<Product> smartSearch(@RequestParam String term){
+        return productService.smartSearch(term);
     }
 
     @PostMapping
